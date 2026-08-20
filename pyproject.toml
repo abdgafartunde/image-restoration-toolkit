@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "imrestore"
+version = "0.0.1"
+description = "Adaptive and quasi-Newton first-order methods for image restoration"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Abd'gafar Tunde Tiamiyu" }]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "jupyter", "nbclient", "ipykernel"]
+
+[project.urls]
+Homepage = "https://github.com/abdgafartunde/image-restoration-toolkit"
+Related = "https://github.com/abdgafartunde/eit-reconstruction-toolkit"
+
+[tool.setuptools.packages.find]
+include = ["imrestore*"]
