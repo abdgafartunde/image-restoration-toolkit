@@ -26,6 +26,15 @@ sigma = 1, noise sigma = 0.01) with `var_pdal`: PSNR 19.7 to 29.3 dB, SSIM
 0.76 to 0.93. Denoising results, convergence plots, and how to regenerate
 them are in [`figures/`](figures/).
 
+## Documentation
+
+- [`examples/00_getting_started.ipynb`](examples/00_getting_started.ipynb): the
+  tutorial. Start here.
+- [`docs/imrestore-tech-note.pdf`](docs/imrestore-tech-note.pdf): the technical
+  note. The algorithms as implemented, verification, results, parameter
+  guidance, API reference, and limitations.
+- [`THEORY.md`](THEORY.md): derivations and the papers' algorithm boxes.
+
 ## Motivation
 
 Image restoration is an inverse problem: recover a clean image `x` from
