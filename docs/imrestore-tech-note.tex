@@ -94,10 +94,12 @@ $\min_x\max_y \langle Kx,y\rangle + g(x) + h(x) - f^*(y)$ & PDAL, VarPDAL &
 \bottomrule
 \end{tabular}
 \end{center}
-None of the methods needs the Lipschitz constant of a gradient or the norm of
-an operator to be known in advance: AdGD estimates the local curvature, and
-PDAL and VarPDAL find their step sizes by linesearch. QN-FBS and VarPDAL add
-a rank-one quasi-Newton correction to the metric of the proximal step.
+AdGD and PDAL need no Lipschitz constant and no operator norm: AdGD estimates
+the local curvature, and PDAL finds its step sizes by linesearch. QN-FBS needs
+the cocoercivity constant $\beta$ of $B$, and VarPDAL the Lipschitz constant
+$L_h$ of $\nabla h$, because both set the base metric from them; VarPDAL
+still finds its step sizes by linesearch, and no method needs $\|K\|$. QN-FBS
+and VarPDAL add a rank-one quasi-Newton correction to the metric.
 
 \texttt{imrestore} depends only on NumPy, SciPy, and Matplotlib. It is
 intended for comparing these methods on common problems and as a readable
@@ -196,21 +198,35 @@ rank-one correction per iteration (the paper's 0SR1 update, Section~5):
 with $s_k = z_k - z_{k-1}$, $y_k = Bz_k - Bz_{k-1}$, the sign of
 $\langle r_k,s_k\rangle$, and no update when that inner product vanishes.
 For the minus sign, $\gamma_k$ is clipped so that $M_k$ stays positive
-definite.
+definite. Because $B$ is $\beta$-cocoercive and $\theta_0>1/\beta$,
+$\langle y_k,s_k\rangle\le\|s_k\|^2/\beta<\theta_0\|s_k\|^2$, so
+$\langle r_k,s_k\rangle<0$ always: in practice only the minus sign occurs,
+and $\gamma_k$ is always clipped.
 
 Each iteration takes an inertial step
-$\bar z_k = z_k + \alpha(z_k-z_{k-1})$, a forward step in the metric $M_0$,
-and a backward step in the metric $M_k$. The latter is computed by the
-paper's resolvent calculus: it reduces to finding the root of a strictly
-increasing scalar function, found by bracketing (up to 40 expansions) and
-bisection (60 steps), with two evaluations of the simple resolvent per step;
-$M_k$ is never formed or inverted. The method stops when
+$\bar z_k = z_k + \alpha(z_k-z_{k-1})$ and then the forward-backward step in
+the metric $M_k$,
+\[
+  z_{k+1} = (M_k+A)^{-1}\bigl(M_k\bar z_k - B\bar z_k\bigr),
+\]
+so both the forward and the backward step use $M_k$. It is computed by the
+paper's resolvent calculus: with $w=\bar z_k - B\bar z_k/\theta_0$,
+$z_{k+1} = J_A^{\theta_0I}(w \mp \xi^*u_k/\theta_0)$, where $\xi^*$ is the
+root of a strictly increasing scalar function, found by bracketing (up to 40
+expansions) and bisection (60 steps), with one evaluation of the simple
+resolvent per step; $M_k$ is never formed or inverted. The method stops when
 $\|z_{k+1}-z_k\|\le\code{tol}$.
 
-The paper's convergence theorem requires a summable-type inertial schedule.
-A constant \code{inertial\_alpha}$>0$ is a common heuristic that the
-theorem does not cover; \code{inertial\_alpha = 0} (the default) runs the
-non-inertial method, which it does.
+\paragraph{Convergence guarantees.} The paper's Theorem~3.1 for this
+algorithm needs a summable-type inertial schedule and its Assumption~1 on the
+metrics, $(1+\eta_k)M_k\succeq M_{k+1}$ with $(\eta_k)$ summable; its
+Lemma~5.2 obtains this from a rank-one scale proportional to a summable
+sequence. \texttt{imrestore} uses a constant $\gamma$, clipped as in
+Lemma~5.1(ii), which gives only the paper's Assumption~2, the one used for its
+relaxed Algorithm~2 (not implemented). No theorem in the paper therefore
+covers the iteration as implemented, with or without inertia
+(\code{inertial\_alpha = 0} is the default); it converges on all the test
+and demo problems of Section~\ref{sec:verification}.
 
 \subsection{PDAL and VarPDAL}
 
@@ -275,10 +291,13 @@ consistency and $O(N)$ cost, \texttt{imrestore} uses instead the rank-one
 metric~\eqref{eq:0sr1} and the scalar resolvent calculus of QN-FBS, with
 secant pairs from consecutive values of $\nabla h$ and
 $\theta_0>L_h$ (default $1.1L_h$). It stops when the change in the primal
-and dual iterates is at most \code{tol}.
+and dual iterates is at most \code{tol}. The convergence theorem
+of~\cite{WangFadiliOchs2024} assumes metrics satisfying its Assumption~1;
+that the rank-one metric used here does so has not been shown, so, as for
+QN-FBS, the guarantee does not cover the implementation as is.
 
 % ================================================================== %
-\section{Verification}
+\section{Verification}\label{sec:verification}
 % ================================================================== %
 
 The package is verified at three levels: the operators, the proximal maps,
@@ -319,9 +338,10 @@ reference.}
   \item \emph{Convergence demos.} \code{scripts/demo\_*.py} compare each
         method with a baseline on these problems (Figure~\ref{fig:demos}).
 \end{itemize}
-The test suite has 31 tests. Continuous integration runs it on Python 3.10
+The test suite has 32 tests. Continuous integration runs it on Python 3.10
 to 3.13, runs every script from outside the repository, and executes both
-notebooks; the benchmark notebook reproduces its stored outputs exactly.
+notebooks (without comparing their outputs); when last checked by hand, the
+benchmark notebook reproduced its stored outputs exactly.
 
 % ================================================================== %
 \section{Restoration results}
@@ -339,7 +359,7 @@ runs two experiments (Figures~\ref{fig:denoise} and~\ref{fig:deblur}):
         with $w=10^{-3}$ and 3000 iterations: PSNR 19.7 to 29.3\,dB, SSIM
         0.76 to 0.93.
 \end{itemize}
-Both weights favour visual quality over PSNR. For denoising, PSNR peaks at
+Both weights favor visual quality over PSNR. For denoising, PSNR peaks at
 $w=0.05$ (27.8\,dB) and SSIM at $w=0.07$ (0.631); $w=0.1$ gives flatter
 regions at 25.8\,dB and SSIM 0.623. For deblurring, a sweep with the same
 settings gives PSNR 30.8\,dB at $w=3\times10^{-4}$ to $5\times10^{-4}$ and
@@ -368,10 +388,14 @@ constraint) and reach 21.34\,dB (SSIM 0.350) in 38 and 30 iterations;
 VarPDAL with TV ($w=0.08$, 200 iterations) reaches 24.40\,dB (SSIM 0.562).
 
 \paragraph{Step sizes.} In the tutorial's deblurring problem with a smooth
-objective ($L\le1.08$), AdGD reaches machine precision in about 200
-iterations, while gradient descent with the fixed step $1/L$ is still near
-$10^{-10}$ after 300. Its median step is 1.76, about twice $1/L$, and its
-largest is 17.6.
+objective, the bound $L\le1+8\mu=1.08$ is all one knows without extra work
+(the true value is $0.999$). AdGD, without $L$, reaches an objective gap of
+$10^{-12}$ after about 140 iterations and machine precision by about 200;
+its median step is 1.76, below the stability limit $2/L\approx2.0$.
+Gradient descent with the safe step $1/1.08$ is still near $10^{-10}$ after
+300 iterations, while a step tuned to $1.8/L$ reaches $2\times10^{-15}$. The
+advantage of AdGD is that it needs neither $L$ nor tuning, not that it beats
+a well-tuned fixed step.
 
 \paragraph{Choosing the TV weight.} In the tutorial (deblurring without
 clipping the data), the discrepancy principle~\cite{Morozov1966}, which picks
@@ -391,8 +415,9 @@ gradient norm, and pass \code{objective} only to record the history.
 
 \paragraph{QN-FBS.} Pass the cocoercivity constant \code{beta} $=1/L$ of
 $B$; for $f(x)=\tfrac12\|Ax-b\|^2+\tfrac\mu2\|Dx\|^2$ with the blur and
-gradient above, $L\le\|A\|^2+8\mu\le1+8\mu$. Keep
-\code{inertial\_alpha = 0} if you need the convergence guarantee.
+gradient above, $L\le\|A\|^2+8\mu\le1+8\mu$. A constant
+\code{inertial\_alpha} adds momentum, but see the remarks on guarantees in
+Section~\ref{sec:algorithms}.
 
 \paragraph{PDAL and VarPDAL.} The initial step (\code{tau0} or
 \code{sigma0}) only needs to be of the right order: the linesearch adjusts
@@ -457,9 +482,11 @@ which run from any directory and accept \code{--outdir}.
   \item \emph{Metrics.} QN-FBS and VarPDAL use a rank-one quasi-Newton
         metric only; the multi-memory L-BFGS/L-SR1 metrics of the papers are
         not implemented.
-  \item \emph{Guarantees.} The accelerated AdGD variant and QN-FBS with a
-        constant inertial parameter are heuristics without the papers'
-        guarantees; the accelerated variants of PDAL are not implemented.
+  \item \emph{Guarantees.} The accelerated AdGD variant is a heuristic
+        without a convergence proof, and the papers' theorems for QN-FBS and
+        VarPDAL do not cover the constant-scale rank-one metric used here
+        (Section~\ref{sec:algorithms}); the accelerated variants of PDAL are
+        not implemented.
   \item \emph{Models.} Grayscale images, Gaussian blur with periodic
         boundaries, and Gaussian noise; no Poisson data terms, no
         spatially varying blur.

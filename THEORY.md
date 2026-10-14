@@ -139,9 +139,14 @@ convergence to a solution provided `α_k` follows a *summable-type*
 schedule (`Σ_k α_k max{...} < ∞`), plus linear convergence if `A` or `B`
 is strongly monotone. `imrestore` exposes a constant `inertial_alpha` for
 convenience; a constant sequence is a common heuristic relaxation of the
-paper's schedule, not literally covered by Theorem 3.1 — set
-`inertial_alpha=0` to run the plain (non-inertial) step, which the theorem
-does cover.
+paper's schedule, not covered by Theorem 3.1. Theorem 3.1 also needs the
+paper's Assumption 1 on the metrics, `(1 + η_k) M_k ⪰ M_{k+1}` with summable
+`η_k`, which Lemma 5.2 obtains with a rank-1 scale proportional to a summable
+sequence. `imrestore` uses a constant `γ` (clipped as in Lemma 5.1(ii)), which
+gives only Assumption 2, the one for the paper's relaxed Algorithm 2 (not
+implemented). So no theorem in the paper covers the iteration as
+implemented, even with `inertial_alpha=0`; it converges on all the test and
+demo problems.
 
 Role in this toolkit: applied to deblurring/denoising as an inclusion
 problem (`A = ∂(regularizer)`, `B = ∇(data fidelity)`), including

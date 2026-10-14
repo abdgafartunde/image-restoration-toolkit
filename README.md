@@ -40,14 +40,15 @@ them are in [`figures/`](figures/).
 Image restoration is an inverse problem: recover a clean image `x` from
 noisy/blurred measurements `b = Ax + noise`, typically solved as a composite
 convex (or monotone-inclusion) optimization problem. This toolkit implements
-three complementary lines of work on solving that problem without needing to
-know a Lipschitz constant or hand-tune step sizes:
+three complementary lines of work on solving that problem without
+hand-tuned step sizes (AdGD and PDAL need no Lipschitz constant; QN-FBS and
+VarPDAL need one constant of the smooth part, which sets their metric):
 
-1. **Adaptive step sizes for gradient descent** — no line search, no
+1. **Adaptive step sizes for gradient descent**: no line search, no
    Lipschitz constant, provable convergence.
-2. **Inertial quasi-Newton forward-backward splitting** — curvature-aware
+2. **Inertial quasi-Newton forward-backward splitting**: curvature-aware
    proximal steps for monotone inclusions.
-3. **(Variable-metric) primal-dual algorithms with linesearch** — for
+3. **(Variable-metric) primal-dual algorithms with linesearch**: for
    saddle-point formulations (e.g. TV-regularized restoration), extended
    with a quasi-Newton metric.
 
@@ -64,7 +65,7 @@ problems, rather than living as three disconnected, paper-specific scripts.
 | `imrestore.algorithms.var_pdal` | Primal-Dual Algorithm with Linesearch (PDAL) + variable-metric extension (VarPDAL) | Malitsky & Pock, *A First-Order Primal-Dual Algorithm with Linesearch*, SIAM J. Optim. 28(1), 2018 ([arXiv:1608.08883](https://arxiv.org/abs/1608.08883)); Wang, Fadili & Ochs, *A Quasi-Newton Primal-Dual Algorithm with Line Search*, 2024 ([arXiv:2405.06824](https://arxiv.org/abs/2405.06824)) |
 
 All code in this repository is an original reimplementation from the papers
-above — see [Acknowledgments](#acknowledgments).
+above; see [Acknowledgments](#acknowledgments).
 
 ## Project layout
 
@@ -75,7 +76,7 @@ imrestore/
 ├── metrics/     # PSNR/SSIM, convergence/objective tracking
 └── utils/       # image I/O, synthetic phantoms, visualization
 
-examples/    # 01_restoration_benchmark.ipynb — all three algorithms compared
+examples/    # 00_getting_started.ipynb (tutorial), 01_restoration_benchmark.ipynb
 scripts/     # demo/figure-generation scripts, incl. restoration_demo.py
 figures/     # generated convergence plots and restoration results
 tests/       # unit tests (31, covering algorithms, operators, metrics, utils)
@@ -93,7 +94,7 @@ pip install -e ".[dev]"
 Requires Python 3.10 or later. To reproduce the tested environment exactly,
 use the lock file: `uv sync --extra dev`. GitHub Actions runs the tests on
 Python 3.10 to 3.13, runs every script from outside the repository, and
-executes the benchmark notebook.
+executes both notebooks.
 
 ## Quickstart
 
@@ -187,4 +188,4 @@ from the published papers.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT; see [LICENSE](LICENSE).
