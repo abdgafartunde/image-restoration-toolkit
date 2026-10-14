@@ -42,5 +42,7 @@ jobs:
           for script in demo_adaptive_gd demo_quasi_newton_fbs demo_var_pdal restoration_demo; do
             python "$GITHUB_WORKSPACE/scripts/$script.py" --outdir "$RUNNER_TEMP/figures"
           done
-          jupyter nbconvert --to notebook --execute --output "$RUNNER_TEMP/benchmark.ipynb" \
-            "$GITHUB_WORKSPACE/examples/01_restoration_benchmark.ipynb"
+          for nb in 00_getting_started 01_restoration_benchmark; do
+            jupyter nbconvert --to notebook --execute --output "$RUNNER_TEMP/$nb.ipynb" \
+              "$GITHUB_WORKSPACE/examples/$nb.ipynb"
+          done

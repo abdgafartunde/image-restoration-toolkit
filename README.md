@@ -17,6 +17,15 @@ restoration (denoising, deblurring). Companion project to
 > outputs). See [THEORY.md](THEORY.md) for the mathematical write-up and
 > `figures/` for results.
 
+## Sample results
+
+![TV deblurring with var_pdal: ground truth, blurred and noisy, restored](figures/restoration_deblurring.png)
+
+TV-regularized deblurring of the Shepp-Logan phantom (Gaussian blur with
+sigma = 1, noise sigma = 0.01) with `var_pdal`: PSNR 19.7 to 29.3 dB, SSIM
+0.76 to 0.93. Denoising results, convergence plots, and how to regenerate
+them are in [`figures/`](figures/).
+
 ## Motivation
 
 Image restoration is an inverse problem: recover a clean image `x` from
@@ -78,6 +87,11 @@ Python 3.10 to 3.13, runs every script from outside the repository, and
 executes the benchmark notebook.
 
 ## Quickstart
+
+**New to imrestore?** Start with the tutorial,
+[`examples/00_getting_started.ipynb`](examples/00_getting_started.ipynb): it
+deblurs an image step by step with each method and shows how to choose the
+regularization weight from the data.
 
 ```bash
 python scripts/restoration_demo.py
