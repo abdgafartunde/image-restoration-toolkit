@@ -1,6 +1,7 @@
 # image-restoration-toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23363421.svg)](https://doi.org/10.5281/zenodo.23363421)
 [![Tests](https://github.com/abdgafartunde/image-restoration-toolkit/actions/workflows/tests.yml/badge.svg)](https://github.com/abdgafartunde/image-restoration-toolkit/actions/workflows/tests.yml)
 
 A modular Python toolkit collecting **adaptive and quasi-Newton first-order
@@ -141,8 +142,9 @@ denoised = result.x
 ## Citation
 
 If you use this toolkit, please cite the original papers for the method(s)
-you use (BibTeX below), and optionally this repository (citation metadata in
-[`CITATION.cff`](CITATION.cff)):
+you use (BibTeX below), and optionally this software through its Zenodo archive
+([10.5281/zenodo.23363421](https://doi.org/10.5281/zenodo.23363421), which always
+resolves to the latest version; citation metadata in [`CITATION.cff`](CITATION.cff)):
 
 ```bibtex
 @inproceedings{malitsky2020adaptive,
