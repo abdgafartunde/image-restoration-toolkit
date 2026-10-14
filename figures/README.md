@@ -28,9 +28,9 @@ write-ups can reference stable images.
   denoising.
 - `restoration_deblurring.png` — ground truth / Gaussian-blurred+noisy
   (σ=1.0 blur) / deblurred (PSNR 19.7→29.3 dB, SSIM 0.76→0.93), visually
-  close to indistinguishable from ground truth. Here (unlike denoising)
-  the visual-quality sweep and the PSNR-maximizing weight landed at the
-  same place (`tv_weight=0.001`). Needs `max_iter=3000` (not `var_pdal`'s
+  close to indistinguishable from ground truth. `tv_weight=0.001` gives
+  the highest SSIM in a sweep (0.927); PSNR peaks at a smaller weight,
+  3e-4 to 5e-4 (30.8 dB), where more noise remains. Needs `max_iter=3000` (not `var_pdal`'s
   usual few hundred) to fully converge at this low weight — checked
   against an independent, separately-coded Chambolle-Pock reference; 200
   iterations undershoots the true optimum by several dB.

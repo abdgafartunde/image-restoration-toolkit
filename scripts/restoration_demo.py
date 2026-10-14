@@ -59,10 +59,10 @@ def run_denoising(x_true, tv_weight=0.1, noise_sigma=0.08, max_iter=200):
 
 
 def run_deblurring(x_true, tv_weight=0.001, blur_sigma=1.0, noise_sigma=0.01, max_iter=3000):
-    # max_iter is much higher than denoising's: this tv_weight is deliberately low
-    # (best PSNR *and* best visual quality in a sweep both landed here, unlike
-    # denoising where they diverged), and low weight means a slower-converging,
-    # closer-to-unregularized problem. Checked against an independent, separately-
+    # max_iter is much higher than denoising's: this tv_weight is low, and a low
+    # weight means a slower-converging, closer-to-unregularized problem. In a
+    # sweep with 3000 iterations, SSIM peaks here (0.927) while PSNR peaks at
+    # a smaller weight, 3e-4 to 5e-4 (30.8 dB vs 29.3 dB at 1e-3). Checked against an independent, separately-
     # implemented Chambolle-Pock reference: 200 iterations undershoots the true
     # optimum by several dB PSNR; ~2000-3000 is needed to actually reach it.
     blur = GaussianBlur(sigma=blur_sigma)
