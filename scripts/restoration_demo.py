@@ -9,12 +9,14 @@ is exactly the case var_pdal is for: h is smooth but not simple enough to
 fold into g's prox once the box constraint is also present.
 
 Saves before/after image grids, PSNR/SSIM numbers, and convergence plots
-to figures/.
+to figures/ (or --outdir DIR).
 """
 
 from __future__ import annotations
 
 import numpy as np
+
+from _cli import output_dir
 
 from imrestore.algorithms.var_pdal import var_pdal
 from imrestore.metrics.image_quality import psnr, ssim
@@ -90,6 +92,7 @@ def run_deblurring(x_true, tv_weight=0.001, blur_sigma=1.0, noise_sigma=0.01, ma
 
 
 def main():
+    outdir = output_dir(__doc__.splitlines()[0])
     x_true = load_phantom("shepp-logan", size=96)
 
     noisy, denoise_result = run_denoising(x_true)
@@ -107,12 +110,12 @@ def main():
     fig1 = plot_restoration_grid(
         {"ground truth": x_true, "noisy": noisy, "denoised": denoise_result.x}
     )
-    fig1.savefig("figures/restoration_denoising.png", dpi=150)
+    fig1.savefig(outdir / "restoration_denoising.png", dpi=150)
 
     fig2 = plot_restoration_grid(
         {"ground truth": x_true, "blurred+noisy": degraded, "deblurred": deblur_result.x}
     )
-    fig2.savefig("figures/restoration_deblurring.png", dpi=150)
+    fig2.savefig(outdir / "restoration_deblurring.png", dpi=150)
 
     ax = plot_convergence(
         {
@@ -121,9 +124,9 @@ def main():
         },
         ylabel="objective",
     )
-    ax.figure.savefig("figures/restoration_convergence.png", dpi=150)
+    ax.figure.savefig(outdir / "restoration_convergence.png", dpi=150)
 
-    print("saved figures/restoration_denoising.png, restoration_deblurring.png, restoration_convergence.png")
+    print(f"saved restoration_denoising.png, restoration_deblurring.png, restoration_convergence.png to {outdir}")
 
 
 if __name__ == "__main__":

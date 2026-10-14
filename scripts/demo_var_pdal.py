@@ -23,6 +23,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+from _cli import output_dir
+
 from imrestore.algorithms.var_pdal import pdal, var_pdal
 
 
@@ -31,6 +33,7 @@ def project_box(x, lo, hi):
 
 
 def main():
+    outdir = output_dir(__doc__.splitlines()[0])
     rng = np.random.default_rng(2)
     d = 30
     lo, hi = -1.0, 1.0
@@ -74,7 +77,7 @@ def main():
     ax.legend()
     fig.tight_layout()
 
-    out_path = "figures/var_pdal_convergence.png"
+    out_path = outdir / "var_pdal_convergence.png"
     fig.savefig(out_path, dpi=150)
     print(f"saved {out_path}")
 

@@ -1,5 +1,5 @@
 """Run inertial quasi-Newton FBS on an ill-conditioned box-constrained
-quadratic and save a convergence figure to figures/, comparing against
+quadratic and save a convergence figure to figures/ (or --outdir DIR), comparing against
 plain (non-adaptive-metric) projected gradient descent as a baseline.
 
 Not a restoration benchmark yet (operators/ isn't wired in); this is a
@@ -13,6 +13,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+
+from _cli import output_dir
 
 from imrestore.algorithms.quasi_newton_fbs import inertial_quasi_newton_fbs
 
@@ -45,6 +47,7 @@ def projected_gd(gradient, x0, lo, hi, step, n_iter, objective):
 
 
 def main():
+    outdir = output_dir(__doc__.splitlines()[0])
     lo, hi = -0.3, 0.3
     objective, gradient, L = make_box_constrained_quadratic()
     x0 = np.zeros(40)
@@ -73,7 +76,7 @@ def main():
     ax.legend()
     fig.tight_layout()
 
-    out_path = "figures/quasi_newton_fbs_convergence.png"
+    out_path = outdir / "quasi_newton_fbs_convergence.png"
     fig.savefig(out_path, dpi=150)
     print(f"saved {out_path}")
 

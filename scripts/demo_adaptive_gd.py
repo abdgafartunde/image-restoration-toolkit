@@ -1,5 +1,5 @@
 """Run AdGD and AdGD-accel on an ill-conditioned strongly-convex quadratic
-and save a convergence figure to figures/.
+and save a convergence figure to figures/ (or --outdir DIR).
 
 Not a benchmark against blurring/denoising yet (operators aren't
 implemented); this is a sanity-check / illustration for the optimizer core
@@ -13,6 +13,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+
+from _cli import output_dir
 
 from imrestore.algorithms.adaptive_gd import (
     accelerated_adaptive_gradient_descent,
@@ -38,6 +40,7 @@ def make_illconditioned_quadratic(d=50, condition_number=500.0, seed=0):
 
 
 def main():
+    outdir = output_dir(__doc__.splitlines()[0])
     objective, gradient, x_star, f_star = make_illconditioned_quadratic()
     x0 = np.zeros_like(x_star)
 
@@ -66,7 +69,7 @@ def main():
     axes[1].legend()
 
     fig.tight_layout()
-    out_path = "figures/adaptive_gd_convergence.png"
+    out_path = outdir / "adaptive_gd_convergence.png"
     fig.savefig(out_path, dpi=150)
     print(f"saved {out_path}")
 
