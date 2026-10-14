@@ -4,12 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "imrestore"
-version = "0.0.1"
+version = "0.1.0"
 description = "Adaptive and quasi-Newton first-order methods for image restoration"
 readme = "README.md"
 license = { text = "MIT" }
-authors = [{ name = "Abd'gafar Tunde Tiamiyu" }]
-requires-python = ">=3.9"
+authors = [{ name = "Abd'gafar Tunde Tiamiyu", email = "abdgafartunde@yahoo.com" }]
+requires-python = ">=3.10"
+keywords = ["image restoration", "primal-dual", "quasi-Newton", "adaptive gradient descent", "total variation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
 dependencies = [
     "numpy",
     "scipy",

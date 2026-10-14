@@ -1,5 +1,8 @@
 # image-restoration-toolkit
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Tests](https://github.com/abdgafartunde/image-restoration-toolkit/actions/workflows/tests.yml/badge.svg)](https://github.com/abdgafartunde/image-restoration-toolkit/actions/workflows/tests.yml)
+
 A modular Python toolkit collecting **adaptive and quasi-Newton first-order
 methods for monotone-inclusion / saddle-point problems**, applied to image
 restoration (denoising, deblurring). Companion project to
@@ -69,6 +72,11 @@ cd image-restoration-toolkit
 pip install -e ".[dev]"
 ```
 
+Requires Python 3.10 or later. To reproduce the tested environment exactly,
+use the lock file: `uv sync --extra dev`. GitHub Actions runs the tests on
+Python 3.10 to 3.13, runs every script from outside the repository, and
+executes the benchmark notebook.
+
 ## Quickstart
 
 ```bash
@@ -77,7 +85,8 @@ python scripts/restoration_demo.py
 
 runs TV-regularized denoising and deblurring on the Shepp-Logan phantom via
 `var_pdal`, printing PSNR/SSIM before and after and saving before/after
-image grids + convergence curves to `figures/`.
+image grids + convergence curves to `figures/`. The scripts run from any
+working directory; pass `--outdir DIR` to save the figures elsewhere.
 
 Minimal TV denoising example (see `scripts/restoration_demo.py` for the
 full deblurring version, which adds a `GaussianBlur` forward operator):
@@ -108,7 +117,8 @@ denoised = result.x
 ## Citation
 
 If you use this toolkit, please cite the original papers for the method(s)
-you use (BibTeX below), and optionally this repository:
+you use (BibTeX below), and optionally this repository (citation metadata in
+[`CITATION.cff`](CITATION.cff)):
 
 ```bibtex
 @inproceedings{malitsky2020adaptive,

@@ -1,0 +1,51 @@
+{
+  "title": "imrestore: Adaptive and Quasi-Newton First-Order Methods for Image Restoration",
+  "description": "A Python package of adaptive and quasi-Newton first-order methods for image restoration: adaptive gradient descent (Malitsky & Mishchenko, 2020), inertial quasi-Newton forward-backward splitting (Wang, Fadili & Ochs, 2022), and the primal-dual algorithm with linesearch with its variable-metric extension (Malitsky & Pock, 2018; Wang, Fadili & Ochs, 2024), with Gaussian blur and total-variation operators, proximal maps, and PSNR/SSIM metrics. All methods are independent reimplementations from the papers.",
+  "creators": [
+    {
+      "name": "Tiamiyu, Abd'gafar Tunde",
+      "affiliation": "School of Mathematics, Jilin University, Changchun 130012, China",
+      "orcid": "0000-0003-1641-7196"
+    }
+  ],
+  "keywords": [
+    "image restoration",
+    "image deblurring",
+    "image denoising",
+    "primal-dual methods",
+    "quasi-Newton methods",
+    "adaptive gradient descent",
+    "total variation",
+    "monotone inclusion"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "version": "0.1.0",
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/abdgafartunde/image-restoration-toolkit",
+      "resource_type": "software"
+    },
+    {
+      "relation": "references",
+      "identifier": "arXiv:1910.09529",
+      "scheme": "arxiv"
+    },
+    {
+      "relation": "references",
+      "identifier": "arXiv:2209.14019",
+      "scheme": "arxiv"
+    },
+    {
+      "relation": "references",
+      "identifier": "10.1137/16M1092015",
+      "scheme": "doi"
+    },
+    {
+      "relation": "references",
+      "identifier": "arXiv:2405.06824",
+      "scheme": "arxiv"
+    }
+  ]
+}
