@@ -28,6 +28,10 @@ class GaussianBlur:
     def __init__(self, sigma: float, kernel_size: Optional[int] = None):
         if kernel_size is None:
             kernel_size = 2 * int(round(3 * sigma)) + 1
+        if kernel_size % 2 != 1:
+            # An even kernel has no centre pixel, so the circular convolution
+            # is not symmetric and `adjoint` would not be the adjoint.
+            raise ValueError(f"kernel_size must be odd, got {kernel_size}")
         self.sigma = sigma
         self.kernel_size = kernel_size
         self._kernel = _gaussian_kernel_2d(sigma, kernel_size)

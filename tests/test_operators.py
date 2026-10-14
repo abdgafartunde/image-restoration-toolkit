@@ -86,3 +86,12 @@ def test_tv_prox_conj_projects_onto_dual_ball():
     result = tv.prox_conj(p)
     assert np.isclose(np.linalg.norm(result[:, 0, 0]), 0.3)
     assert np.allclose(result[:, 1, 1], p[:, 1, 1])
+
+
+def test_gaussian_blur_rejects_even_kernel_size():
+    import pytest
+
+    from imrestore.operators.blur import GaussianBlur
+
+    with pytest.raises(ValueError):
+        GaussianBlur(sigma=1.0, kernel_size=6)

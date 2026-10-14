@@ -95,14 +95,16 @@ def rank1_resolvent_step(
     u: Optional[np.ndarray],
     sign: int,
 ) -> np.ndarray:
-    """Compute `J_A^{M}(w)` where `M = theta0*I + sign*u u^T`, via the
-    rank-1 resolvent calculus (Theorem 4.1 / Corollary 4.3, Prop. 4.9):
-    reduces to evaluating `resolvent_base` (the resolvent/prox w.r.t. the
-    simple base metric `theta0*I`) plus a 1-D root-find, never forming or
-    inverting `M`.
+    """Forward-backward step in the metric `M = theta0*I + sign*u u^T`.
 
-    `z` is the un-shifted evaluation point; `w` is the forward step
-    already computed by the caller (e.g. `z - Bz/theta0`).
+    Given `w = z - Bz/theta0` (computed by the caller), returns
+    `p = (M + A)^{-1}(M z - B z)`, i.e. a forward step `z - M^{-1} B z` and a
+    resolvent step, both in the metric `M`. By the rank-1 resolvent calculus
+    (Theorem 4.1 / Corollary 4.3, Prop. 4.9 of arXiv:2209.14019),
+    `p = J_A^{theta0 I}(w - sign*xi*u/theta0)`, where the scalar `xi` solves
+    `<u, z - p(xi)> + xi = 0` (strictly increasing in `xi`). Each step of the
+    root-finder evaluates `resolvent_base` (the resolvent in the simple
+    metric `theta0*I`) once; `M` is never formed or inverted.
     """
     if u is None:
         return resolvent_base(w, theta0)

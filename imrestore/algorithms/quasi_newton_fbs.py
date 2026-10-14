@@ -68,13 +68,16 @@ def inertial_quasi_newton_fbs(
         (Section 5 requires M_0 - (1/beta) I positive definite). Defaults
         to 1.1/beta if not given.
     inertial_alpha:
-        Constant inertial (extrapolation) coefficient in [0, 1). The
-        paper's Theorem 3.1 requires a *summable-type* schedule
-        (sum_k alpha_k * (...) < infinity) for the proven convergence
-        guarantee; a small constant alpha is a common heuristic relaxation
-        of that, not itself covered by the theorem. Use 0.0 to run the
-        plain (non-inertial) quasi-Newton FBS step, which the theorem does
-        cover.
+        Constant inertial (extrapolation) coefficient in [0, 1). Use 0.0
+        (the default) for the non-inertial step. Note on guarantees: the
+        paper's Theorem 3.1 needs a summable-type inertial schedule and its
+        Assumption 1 on the metrics, (1 + eta_k) M_k >= M_{k+1} with
+        summable eta_k, which Lemma 5.2 obtains with a summable sequence in
+        the rank-1 scale. This implementation uses a constant `gamma`
+        (clipped as in Lemma 5.1(ii)), which gives only the paper's
+        Assumption 2, used for its relaxed Algorithm 2 (not implemented).
+        So no theorem in the paper covers this iteration as implemented,
+        with or without inertia; it converges in the tests and demos.
     gamma:
         Target scale for the rank-1 curvature update (paper's gamma_k in
         eq. 29-31, Lemma 5.1). Automatically clipped on negative-curvature
