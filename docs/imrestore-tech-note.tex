@@ -136,7 +136,7 @@ and projection onto a box (\code{prox\_box}); the first two accept a
 diagonal metric.
 
 % ================================================================== %
-\section{Algorithms}
+\section{Algorithms}\label{sec:algorithms}
 % ================================================================== %
 
 Every solver returns an \code{OptimizationResult} with the final iterate
@@ -281,7 +281,11 @@ and dual iterates is at most \code{tol}.
 \section{Verification}
 % ================================================================== %
 
-\begin{figure}[!h]
+The package is verified at three levels: the operators, the proximal maps,
+and the solvers, each against known answers. Figure~\ref{fig:demos} shows
+the convergence demos on synthetic problems with closed-form references.
+
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.32\textwidth]{adaptive_gd_convergence.png}\hfill
 \includegraphics[width=0.32\textwidth]{quasi_newton_fbs_convergence.png}\hfill
@@ -313,8 +317,7 @@ reference.}
         Invalid parameters ($\theta_0\le1/\beta$, $\theta_0\le L_h$) are
         rejected.
   \item \emph{Convergence demos.} \code{scripts/demo\_*.py} compare each
-        method with a baseline on synthetic problems with closed-form
-        references (Figure~\ref{fig:demos}).
+        method with a baseline on these problems (Figure~\ref{fig:demos}).
 \end{itemize}
 The test suite has 31 tests. Continuous integration runs it on Python 3.10
 to 3.13, runs every script from outside the repository, and executes both
@@ -408,10 +411,14 @@ can disagree for TV.
 \section{Software reference}
 % ================================================================== %
 
+Table~\ref{tab:api} lists the public functions; every solver returns an
+\code{OptimizationResult} (Section~\ref{sec:algorithms}).
+
 \begin{table}[ht]
 \centering
 \small
 \caption{Public functions (module prefixes relative to \code{imrestore}).}
+\label{tab:api}
 \begin{tabular}{@{}p{0.52\textwidth}p{0.43\textwidth}@{}}
 \toprule
 function & purpose \\
